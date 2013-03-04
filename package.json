@@ -1,0 +1,17 @@
+{
+  "name": "bookingdojo",
+  "description": "Booking Dojo, an example application build using Hotplate",
+  "version": "0.1.2",
+  "private": false,
+  "dependencies": {
+    "hotplate": "*",
+    "bd": "*",
+    "express": "3.x",
+    "connect-mongo": "*",
+    "mongodb": "*",
+    "mongowrapper": "*"
+  },
+  "bundleDependencies": [
+    "bd"
+  ]
+}
