@@ -28,7 +28,7 @@ mw.connect('mongodb://localhost/hotplate', {}, function( err, db ){
   }
 
   hotplate.set( 'logToScreen' , true );
-  hotplate.set( 'staticUrlPath', '/lib/dojo' ); // Set the static URL path for all modules
+  hotplate.set( 'staticUrlPath', '/dojo' );     // Set the static URL path for all modules
   hotplate.set( 'afterLoginPage', '/ws/' );     // Page to go after logging in. Remember / at the end!
   hotplate.set( 'db', mw.db );                  // The DB variable
 
