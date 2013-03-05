@@ -36,10 +36,10 @@ mw.connect('mongodb://localhost/hotplate', {}, function( err, db ){
   hotplate.set( 'dbObjectId', mw.ObjectId );
 
 
-  hotplate.registerCoreModules(); // Register core modules
+  //hotplate.registerCoreModules(); // Register core modules
   hotplate.registerAllEnabledModules('node_modules'); // Register non-core modules
-  hotplate.registerAllEnabledModules('node_modules/dojo/node_modules'); // Register non-core modules requiring dojo
-  hotplate.registerAllEnabledModules('node_modules/mongo/node_modules'); // Register non-core modules requiring mongoDb
+  //hotplate.registerAllEnabledModules('node_modules/dojo/node_modules'); // Register non-core modules requiring dojo
+  //hotplate.registerAllEnabledModules('node_modules/mongo/node_modules'); // Register non-core modules requiring mongoDb
 
   // require('anotherModule'); hotplate.registerModule('another', 'anotherModule'); 
 
