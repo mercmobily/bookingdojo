@@ -32,17 +32,18 @@ mw.connect('mongodb://localhost/hotplate', {}, function( err, db ){
   hotplate.set( 'afterLoginPage', '/ws/' );     // Page to go after logging in. Remember / at the end!
   hotplate.set( 'db', mw.db );                  // The DB variable
 
-  hotplate.set( 'dbCheckObjectId', mw.checkObjectId );
-  hotplate.set( 'dbObjectId', mw.ObjectId );
+  // hotplate.set( 'dbCheckObjectId', mw.checkObjectId );
+  // hotplate.set( 'dbObjectId', mw.ObjectId );
 
 
-  //hotplate.registerCoreModules(); // Register core modules
-  hotplate.registerAllEnabledModules('node_modules'); // Register non-core modules
-  //hotplate.registerAllEnabledModules('node_modules/dojo/node_modules'); // Register non-core modules requiring dojo
-  //hotplate.registerAllEnabledModules('node_modules/mongo/node_modules'); // Register non-core modules requiring mongoDb
+  // Register modules
+  hotplate.registerAllEnabledModules('node_modules', /^hotCore/ ); // Register all core modules from hotplate's node_modules's dir
+  hotplate.registerAllEnabledModules('node_modules', /^hotDojo/ );
+  hotplate.registerAllEnabledModules('node_modules', /^hotMongo/ );
 
-  // require('anotherModule'); hotplate.registerModule('another', 'anotherModule'); 
-
+  // The following two forms are equivalent
+  // hotplate.registerAllEnabledModules('node_modules', 'bd', __dirname ); // Register 'bd' from this module's node_modules dir
+  hotplate.registerModule( 'bd', require('bd') );
 
   hotplate.initModules( function() {
 
