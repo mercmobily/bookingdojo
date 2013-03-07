@@ -4,12 +4,12 @@
   "version": "0.1.2",
   "private": false,
   "dependencies": {
-    "hotplate": "*",
-    "bd": "*",
+    "hotplate": "0.1.x",
+    "bd": "0.1.x",
     "express": "3.x",
     "connect-mongo": "*",
-    "mongodb": "*",
-    "mongowrapper": "*"
+    "mongodb": "1.x.x",
+    "mongowrapper": "0.1.x"
   },
   "bundleDependencies": [
     "bd"
