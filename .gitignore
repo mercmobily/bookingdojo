@@ -1,2 +1,5 @@
 node_modules/hotplate
 public/lib
+*.swp
+*.swo
+npm-debug.log

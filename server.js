@@ -18,13 +18,23 @@ var app = express();
 
 hotplate.setApp(app); // Associate "app" to hotplate
 
-mw.connect('mongodb://localhost/hotplate', {}, function( err, db ){
+if( app.get('env') === 'development' ){
+  var dbString = 'mongodb://localhost/hotplate';
+} else {
+  var dbString = 'mongodb://nodejitsu_mercmobily:p7dgtpntv0p1vcsssvol01sr1g@ds051977.mongolab.com:51977/nodejitsu_mercmobily_nodejitsudb8390375706';
+}
 
+
+
+ // mw.connect('mongodb://localhost/hotplate', {}, function( err, db ){
+ mw.connect(dbString, {}, function( err, db ){
+
+  
   // The connection is 100% necessary
   if( err ){
     console.log("Could not connect to the mongodb database. Aborting...");
     console.log( err );
-    exit( 1 );
+    process.exit( 1 );
   }
 
   hotplate.set( 'logToScreen' , true );
@@ -62,6 +72,10 @@ mw.connect('mongodb://localhost/hotplate', {}, function( err, db ){
       // Sessions
       app.use(express.cookieParser('woodchucks are nasty animals'));
 
+      // Static routes -- they MUST go before the session!
+      app.use(express.static(path.join(__dirname, 'public')));
+      app.use( hotplate.getModule('hotCoreClientFiles').serve() );
+
       app.use(express.session({
         // secret: settings.cookie_secret,
         secret: 'woodchucks are nasty animals',
@@ -72,12 +86,9 @@ mw.connect('mongodb://localhost/hotplate', {}, function( err, db ){
         })
       }));
 
-      // Static routes
-      app.use(express.static(path.join(__dirname, 'public')));
-
       app.use(app.router);
 
-      app.use( hotplate.getModule('hotCoreClientFiles').serve() );
+
       app.use( hotplate.getModule('hotCoreError').hotCoreErrorHandler );
 
       // If using hotCoreError, this should never ever happen. But still...
