@@ -9,7 +9,7 @@
     "express": "3.x",
     "connect-mongo": "*",
     "mongodb": "1.x.x",
-    "mongowrapper": "0.1.x"
+    "mongowrapper": "0.1.x",
 
     "allhttperrors": "0.1.x",
     "jsonreststores": "0.1.x",
