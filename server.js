@@ -19,12 +19,27 @@ var app = express();
 hotplate.setApp(app); // Associate "app" to hotplate
 
 if( app.get('env') === 'development' ){
+
   var dbString = 'mongodb://localhost/hotplate';
+  hotplate.set('hotDojoConfig', { 
+    dojoUrl: '/dojo/dojo/dojo.js',
+    cssUrl: '/dojo/dijit/themes/claro/claro.css'
+  });
+
 } else {
   var dbString = 'mongodb://nodejitsu_mercmobily:p7dgtpntv0p1vcsssvol01sr1g@ds051977.mongolab.com:51977/nodejitsu_mercmobily_nodejitsudb8390375706';
 }
 
 
+hotplate.set( 'staticUrlPath', '/hotplate' );     // Set the static URL path for all modules
+
+
+
+
+/*
+[16:51] <+julianduque> mercmobily: `jitsu env set MONGO_URL mongodb://......`
+[16:52] <+julianduque> mercmobily: var dbString = process.env.MONGO_URL;
+*/
 
  // mw.connect('mongodb://localhost/hotplate', {}, function( err, db ){
  mw.connect(dbString, {}, function( err, db ){
@@ -38,7 +53,6 @@ if( app.get('env') === 'development' ){
   }
 
   hotplate.set( 'logToScreen' , true );
-  hotplate.set( 'staticUrlPath', '/dojo' );     // Set the static URL path for all modules
   hotplate.set( 'afterLoginPage', '/ws/' );     // Page to go after logging in. Remember / at the end!
   hotplate.set( 'db', mw.db );                  // The DB variable
 

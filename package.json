@@ -10,6 +10,16 @@
     "connect-mongo": "*",
     "mongodb": "1.x.x",
     "mongowrapper": "0.1.x"
+
+    "allhttperrors": "0.1.x",
+    "jsonreststores": "0.1.x",
+    "jsonreststores-mongo": "0.1.x",
+    "simpledeclare": "0.1.x",
+    "simpleschema": "0.1.x",
+    "simpleschema-mongo": "0.1.x",
+    "async": "*",
+    "hat": "*",
+    "bcrypt": "*"
   },
   "bundleDependencies": [
     "bd"
