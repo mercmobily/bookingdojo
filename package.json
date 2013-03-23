@@ -1,7 +1,7 @@
 {
   "name": "bookingdojo",
   "description": "Booking Dojo, an example application build using Hotplate",
-  "version": "0.1.2",
+  "version": "0.1.3-14",
   "private": false,
   "dependencies": {
     "hotplate": "0.1.x",
@@ -10,7 +10,6 @@
     "connect-mongo": "*",
     "mongodb": "1.x.x",
     "mongowrapper": "0.1.x",
-
     "allhttperrors": "0.1.x",
     "jsonreststores": "0.1.x",
     "jsonreststores-mongo": "0.1.x",
@@ -23,5 +22,12 @@
   },
   "bundleDependencies": [
     "bd"
-  ]
+  ],
+  "subdomain": "mercmobily-bookingdojo",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "0.8.x"
+  }
 }
