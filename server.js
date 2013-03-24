@@ -32,6 +32,7 @@ if( app.get('env') === 'development' ){
 
 
 hotplate.set( 'staticUrlPath', '/hotplate' );     // Set the static URL path for all modules
+hotplate.set( 'dgrid-theme', 'claro' );   
 
 
 
