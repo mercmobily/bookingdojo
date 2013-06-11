@@ -1,20 +1,29 @@
 /**
  * Module dependencies.
  */
-var express = require('express'),
-    http = require('http'),
+
+Error.stackTraceLimit = Infinity;
+
+var dummy
+    , express = require('express')
+    , http = require('http')
 
     // Mongodb for sessions
-    MongoStore = require('connect-mongo')(express),
-    mongodb = require('mongodb'),
+    , MongoStore = require('connect-mongo')(express)
+    , mongodb = require('mongodb')
 
-    fs = require('fs'),
-    path = require('path'),
-    mw = require('mongowrapper');
+    , fs = require('fs')
+    , path = require('path')
+    , mw = require('mongowrapper')
+    , passport = require('passport')
+    , FacebookStrategy = require('passport-facebook').Strategy
+
+    ;
 
 var hotplate = require('hotplate');
 
 var app = express();
+
 
 hotplate.setApp(app); // Associate "app" to hotplate
 
@@ -35,6 +44,25 @@ hotplate.set( 'staticUrlPath', '/hotplate' );     // Set the static URL path for
 hotplate.set( 'dgrid-theme', 'claro' );   
 
 
+hotplate.set('hotCoreAuth', {
+   callbackURLBase: 'http://localhost:3000',
+});
+
+
+hotplate.set('hotCoreAuth/strategies', {
+  facebook: { 
+    responseType: 'close',
+    clientID: '453817548028633',
+    clientSecret: '8219677eabdb22ea256d08f515978ee3',
+  },
+
+  local: { 
+    responseType: 'redirect',
+  },
+
+  
+
+});
 
 
 /*
@@ -53,22 +81,20 @@ hotplate.set( 'dgrid-theme', 'claro' );
     process.exit( 1 );
   }
 
+
   hotplate.set( 'logToScreen' , true );
   hotplate.set( 'afterLoginPage', '/ws/' );     // Page to go after logging in. Remember / at the end!
   hotplate.set( 'db', mw.db );                  // The DB variable
 
-  // hotplate.set( 'dbCheckObjectId', mw.checkObjectId );
-  // hotplate.set( 'dbObjectId', mw.ObjectId );
+  // The following two forms are equivalent
+  // hotplate.registerAllEnabledModules('node_modules', 'bd', __dirname ); // Register 'bd' from this module's node_modules dir
+  hotplate.registerModule( 'bd', require('bd') );
 
 
   // Register modules
   hotplate.registerAllEnabledModules('node_modules', /^hotCore/ ); // Register all core modules from hotplate's node_modules's dir
   hotplate.registerAllEnabledModules('node_modules', /^hotDojo/ );
   hotplate.registerAllEnabledModules('node_modules', /^hotMongo/ );
-
-  // The following two forms are equivalent
-  // hotplate.registerAllEnabledModules('node_modules', 'bd', __dirname ); // Register 'bd' from this module's node_modules dir
-  hotplate.registerModule( 'bd', require('bd') );
 
   hotplate.initModules( function() {
 
@@ -84,13 +110,22 @@ hotplate.set( 'dgrid-theme', 'claro' );
       app.use(express.bodyParser());
       app.use(express.methodOverride());
 
+      // Passport
+      app.use(passport.initialize());
+
       // Sessions
+      //app.use(express.cookieParser('woodchucks are nasty animals'));
       app.use(express.cookieParser('woodchucks are nasty animals'));
 
       // Static routes -- they MUST go before the session!
       app.use(express.static(path.join(__dirname, 'public')));
       app.use( hotplate.getModule('hotCoreClientFiles').serve() );
 
+      app.use(express.cookieSession({
+        secret: 'woodchucks are nasty animal',
+      }));
+
+      /*
       app.use(express.session({
         // secret: settings.cookie_secret,
         secret: 'woodchucks are nasty animals',
@@ -100,14 +135,15 @@ hotplate.set( 'dgrid-theme', 'claro' );
            db: db
         })
       }));
+      */
 
       app.use(app.router);
-
 
       app.use( hotplate.getModule('hotCoreError').hotCoreErrorHandler );
 
       // If using hotCoreError, this should never ever happen. But still...
       app.use( function( err, req, res, next){ res.send("Oh dear, this should never happen!"); next(err); } );
+
     });
 
 
@@ -119,6 +155,20 @@ hotplate.set( 'dgrid-theme', 'claro' );
       // app.use(express.errorHandler());
     });
 
+/*
+    app.get( '/test1', function( req, res, next ){
+      req.session = null;
+      req.session = { testing: '' };
+      res.send( req.session.testing );
+    });
+
+    app.get( '/test', function( req, res, next ){
+      console.log( req.session );
+      req.session.testing = req.session.testing + 'o';
+      console.log( req.session );
+      res.send( req.session.testing );
+    });
+*/
 
     hotplate.runModules( function() { 
 
