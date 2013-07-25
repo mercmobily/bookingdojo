@@ -46,22 +46,35 @@ hotplate.set( 'dgrid-theme', 'claro' );
 
 hotplate.set('hotCoreAuth', {
    callbackURLBase: 'http://localhost:3000',
+   multiHomeURL: '/wssssssssssssssssssss/:workspaceId', // MUST contain :workspaceId
 });
 
 
 hotplate.set('hotCoreAuth/strategies', {
   facebook: { 
-    responseType: 'close',
     clientID: '453817548028633',
     clientSecret: '8219677eabdb22ea256d08f515978ee3',
   },
 
   local: { 
-    responseType: 'redirect',
+    // Nothing to set yet
   },
+});
 
-  
 
+
+hotplate.set('hotCoreAuth/redirectURLs/success', {
+  signin: '/pages/pick',
+  recover: '/',
+  register: '/pages/pick',
+  manager: '/',
+});
+
+hotplate.set('hotCoreAuth/redirectURLs/fail', {
+  signin: '/pages/welcome',
+  recover: '/pages/welcome',
+  register: '/pages/welcome',
+  manager: '/',
 });
 
 
@@ -81,20 +94,18 @@ hotplate.set('hotCoreAuth/strategies', {
     process.exit( 1 );
   }
 
-
   hotplate.set( 'logToScreen' , true );
-  hotplate.set( 'afterLoginPage', '/ws/' );     // Page to go after logging in. Remember / at the end!
   hotplate.set( 'db', mw.db );                  // The DB variable
-
-  // The following two forms are equivalent
-  // hotplate.registerAllEnabledModules('node_modules', 'bd', __dirname ); // Register 'bd' from this module's node_modules dir
-  hotplate.registerModule( 'bd', require('bd') );
 
 
   // Register modules
   hotplate.registerAllEnabledModules('node_modules', /^hotCore/ ); // Register all core modules from hotplate's node_modules's dir
   hotplate.registerAllEnabledModules('node_modules', /^hotDojo/ );
   hotplate.registerAllEnabledModules('node_modules', /^hotMongo/ );
+
+  // The following two forms are equivalent
+  // hotplate.registerAllEnabledModules('node_modules', 'bd', __dirname ); // Register 'bd' from this module's node_modules dir
+  hotplate.registerModule( 'bd', require('bd') );
 
   hotplate.initModules( function() {
 
@@ -125,19 +136,8 @@ hotplate.set('hotCoreAuth/strategies', {
         secret: 'woodchucks are nasty animal',
       }));
 
-      /*
-      app.use(express.session({
-        // secret: settings.cookie_secret,
-        secret: 'woodchucks are nasty animals',
-        store: new MongoStore({
-          // db: settings.db
-          // db: hotplate.get('db').client
-           db: db
-        })
-      }));
-      */
-
       app.use(app.router);
+      
 
       app.use( hotplate.getModule('hotCoreError').hotCoreErrorHandler );
 
@@ -155,21 +155,6 @@ hotplate.set('hotCoreAuth/strategies', {
       // app.use(express.errorHandler());
     });
 
-/*
-    app.get( '/test1', function( req, res, next ){
-      req.session = null;
-      req.session = { testing: '' };
-      res.send( req.session.testing );
-    });
-
-    app.get( '/test', function( req, res, next ){
-      console.log( req.session );
-      req.session.testing = req.session.testing + 'o';
-      console.log( req.session );
-      res.send( req.session.testing );
-    });
-*/
-
     hotplate.runModules( function() { 
 
       // Create the actual server
@@ -179,6 +164,7 @@ hotplate.set('hotCoreAuth/strategies', {
         console.log("Express server listening on port " + app.get('port'));
       });
     }); // runModules
+
 
   }); // initModules
 
