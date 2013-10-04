@@ -40,13 +40,36 @@ if( app.get('env') === 'development' ){
 }
 
 
+hotplate.set( 'errorPage', function( req, res, next ){
+  console.log("PASSED ERROR:");
+	console.log( req.hotError );
+  console.log("NAME:");
+  console.log( req.hotError.name );
+
+  res.send("ERROR!!!");
+
+});
+
 hotplate.set( 'staticUrlPath', '/hotplate' );     // Set the static URL path for all modules
 hotplate.set( 'dgrid-theme', 'claro' );   
 
 
+// Multihome enabled
+hotplate.set('hotCoreMultiHome', {
+   enabled: true,
+   multiHomeURL: '/wssssssssssssssssssss/:workspaceId', // MUST contain :workspaceId
+   escapePick: true,
+});
+
+
+// *****************************
+// Authentication configuration
+// *****************************
+
 hotplate.set('hotCoreAuth', {
    callbackURLBase: 'http://localhost:3000',
-   multiHomeURL: '/wssssssssssssssssssss/:workspaceId', // MUST contain :workspaceId
+   //recoverURLexpiry: 60*5, // Seconds for which the recover URL works for
+   recoverURLexpiry: 60*10, // Seconds for which the recover URL works for
 });
 
 
@@ -62,10 +85,18 @@ hotplate.set('hotCoreAuth/strategies', {
 });
 
 
+// The response page for hotCoreAuth. hotDojoAuth needs it in resume (the Facebook window won't
+// close on resume, it will show something instead
+hotplate.set('hotCoreAuth/responsePage', function( strategyId, action, user, profile ){
+  var response = '';
+  response += "<html><body><script type=\"text/javascript\">setTimeout(function(){ window.close() }, 5000);</script> RESPONSE</body></html>";
+  return response;
+});
+
 
 hotplate.set('hotCoreAuth/redirectURLs/success', {
   signin: '/pages/pick',
-  recover: '/',
+  recover: '/pages/pick',
   register: '/pages/pick',
   manager: '/',
 });
@@ -99,9 +130,9 @@ hotplate.set('hotCoreAuth/redirectURLs/fail', {
 
 
   // Register modules
-  hotplate.registerAllEnabledModules('node_modules', /^hotCore/ ); // Register all core modules from hotplate's node_modules's dir
-  hotplate.registerAllEnabledModules('node_modules', /^hotDojo/ );
-  hotplate.registerAllEnabledModules('node_modules', /^hotMongo/ );
+  hotplate.registerAllEnabledModules(/^hotCore/ ); // Register all core modules from hotplate's node_modules's dir
+  hotplate.registerAllEnabledModules(/^hotDojo/ );
+  hotplate.registerAllEnabledModules(/^hotMongo/ );
 
   // The following two forms are equivalent
   // hotplate.registerAllEnabledModules('node_modules', 'bd', __dirname ); // Register 'bd' from this module's node_modules dir
