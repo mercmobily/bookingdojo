@@ -53,7 +53,6 @@ hotplate.set( 'errorPage', function( req, res, next ){
 hotplate.set( 'staticUrlPath', '/hotplate' );     // Set the static URL path for all modules
 hotplate.set( 'dgrid-theme', 'claro' );   
 
-
 // Multihome enabled
 hotplate.set('hotCoreMultiHome', {
    enabled: true,
@@ -117,7 +116,6 @@ hotplate.set('hotCoreAuth/redirectURLs/fail', {
  // mw.connect('mongodb://localhost/hotplate', {}, function( err, db ){
  mw.connect(dbString, {}, function( err, db ){
 
-  
   // The connection is 100% necessary
   if( err ){
     console.log("Could not connect to the mongodb database. Aborting...");
@@ -128,75 +126,59 @@ hotplate.set('hotCoreAuth/redirectURLs/fail', {
   hotplate.set( 'logToScreen' , true );
   hotplate.set( 'db', mw.db );                  // The DB variable
 
+  // Require necessary modules
+  hotplate.require( 'hotCore' );
+  hotplate.require( 'hotDojo' );
+  require( 'bd' );
 
+  hotplate.hotEvents.emit( 'setDefaults', function(){
+    //app.set('port', process.env.PORT || 3000);
+    app.set('port',  3000);
+    app.set('views', __dirname + '/views');
+    app.set('view engine', 'jade');
+
+    // Various middleware
+    app.use(express.favicon());
+    app.use(express.logger('dev'));
+    app.use(express.bodyParser());
+    app.use(express.methodOverride());
+
+    app.use(passport.initialize()); // Passport initialize
+    app.use(express.cookieParser('woodchucks are nasty animals'));
+
+    // Static routes -- they MUST go before the session!
+    app.use(express.static(path.join(__dirname, 'public')));
+    app.use( hotplate.require('hotCoreClientFiles').serve() );
+
+    app.use(express.cookieSession({
+      secret: 'woodchucks are nasty animal',
+    }));
+
+    hotplate.hotEvents.emit( 'setRoutes', function() { 
+      app.use(app.router);
+      app.use( hotplate.require('hotCoreError').hotCoreErrorHandler );
+      app.use( function( err, req, res, next){ res.send("Oh dear, this should never happen!"); next(err); } );
+
+      hotplate.hotEvents.emit( 'run', function() { 
+        // Create the actual server
+        var server = http.createServer( app );
+        server.listen(app.get('port'), function(){
+          console.log("Express server listening on port " + app.get('port'));
+        });
+
+      });
+    });     
+  });
+});
+
+
+// OLD RUBBISH
   // Register modules
-  hotplate.registerAllEnabledModules(/^hotCore/ ); // Register all core modules from hotplate's node_modules's dir
-  hotplate.registerAllEnabledModules(/^hotDojo/ );
-  hotplate.registerAllEnabledModules(/^hotMongo/ );
+  // hotplate.registerAllEnabledModules(/^hotCore/ ); // Register all core modules from hotplate's node_modules's dir
+  // hotplate.registerAllEnabledModules(/^hotDojo/ );
 
   // The following two forms are equivalent
   // hotplate.registerAllEnabledModules('node_modules', 'bd', __dirname ); // Register 'bd' from this module's node_modules dir
-  hotplate.registerModule( 'bd', require('bd') );
-
-  hotplate.initModules( function() {
-
-    app.configure(function(){
-
-      app.set('port', process.env.PORT || 3000);
-      app.set('views', __dirname + '/views');
-      app.set('view engine', 'jade');
-
-      // Various middleware
-      app.use(express.favicon());
-      app.use(express.logger('dev'));
-      app.use(express.bodyParser());
-      app.use(express.methodOverride());
-
-      // Passport
-      app.use(passport.initialize());
-
-      // Sessions
-      //app.use(express.cookieParser('woodchucks are nasty animals'));
-      app.use(express.cookieParser('woodchucks are nasty animals'));
-
-      // Static routes -- they MUST go before the session!
-      app.use(express.static(path.join(__dirname, 'public')));
-      app.use( hotplate.getModule('hotCoreClientFiles').serve() );
-
-      app.use(express.cookieSession({
-        secret: 'woodchucks are nasty animal',
-      }));
-
-      app.use(app.router);
-      
-
-      app.use( hotplate.getModule('hotCoreError').hotCoreErrorHandler );
-
-      // If using hotCoreError, this should never ever happen. But still...
-      app.use( function( err, req, res, next){ res.send("Oh dear, this should never happen!"); next(err); } );
-
-    });
+  // hotplate.registerModule( 'bd', require('bd') );
 
 
-    app.configure('development', function(){
-      // app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-    });
-
-    app.configure('production', function(){
-      // app.use(express.errorHandler());
-    });
-
-    hotplate.runModules( function() { 
-
-      // Create the actual server
-      var server = http.createServer(app);
-
-      server.listen(app.get('port'), function(){
-        console.log("Express server listening on port " + app.get('port'));
-      });
-    }); // runModules
-
-
-  }); // initModules
-
-});
