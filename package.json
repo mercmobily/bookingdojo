@@ -16,7 +16,7 @@
     "simpleschema": "0.1.x",
     "async": "*",
     "hat": "*",
-    "bcrypt": "*"
+    "bcrypt": "*",
     "declare": "*"
   },
   "bundleDependencies": [

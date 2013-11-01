@@ -18,102 +18,17 @@ var dummy
     , passport = require('passport')
     , FacebookStrategy = require('passport-facebook').Strategy
 
-    ;
+    , hotplate = require('hotplate')
+    , configServer = require('./configServer')
+;
 
-var hotplate = require('hotplate');
 
 var app = express();
 
 
-hotplate.setApp(app); // Associate "app" to hotplate
+// Sane DB string that assumes mongoDb
+var dbString = process.env.MONGO_URL || 'mongodb://localhost/hotplate';
 
-if( app.get('env') === 'development' ){
-
-  var dbString = 'mongodb://localhost/hotplate';
-  hotplate.set('hotDojoConfig', { 
-    dojoUrl: '/dojo/dojo/dojo.js',
-    cssUrl: '/dojo/dijit/themes/claro/claro.css'
-  });
-
-} else {
-  var dbString = 'mongodb://nodejitsu_mercmobily:p7dgtpntv0p1vcsssvol01sr1g@ds051977.mongolab.com:51977/nodejitsu_mercmobily_nodejitsudb8390375706';
-}
-
-
-hotplate.set( 'errorPage', function( req, res, next ){
-  console.log("PASSED ERROR:");
-	console.log( req.hotError );
-  console.log("NAME:");
-  console.log( req.hotError.name );
-
-  res.send("ERROR!!!");
-
-});
-
-hotplate.set( 'staticUrlPath', '/hotplate' );     // Set the static URL path for all modules
-hotplate.set( 'dgrid-theme', 'claro' );   
-
-// Multihome enabled
-hotplate.set('hotCoreMultiHome', {
-   enabled: true,
-   multiHomeURL: '/wssssssssssssssssssss/:workspaceId', // MUST contain :workspaceId
-   escapePick: true,
-});
-
-
-// *****************************
-// Authentication configuration
-// *****************************
-
-hotplate.set('hotCoreAuth', {
-   callbackURLBase: 'http://localhost:3000',
-   //recoverURLexpiry: 60*5, // Seconds for which the recover URL works for
-   recoverURLexpiry: 60*10, // Seconds for which the recover URL works for
-});
-
-
-hotplate.set('hotCoreAuth/strategies', {
-  facebook: { 
-    clientID: '453817548028633',
-    clientSecret: '8219677eabdb22ea256d08f515978ee3',
-  },
-
-  local: { 
-    // Nothing to set yet
-  },
-});
-
-
-// The response page for hotCoreAuth. hotDojoAuth needs it in resume (the Facebook window won't
-// close on resume, it will show something instead
-hotplate.set('hotCoreAuth/responsePage', function( strategyId, action, user, profile ){
-  var response = '';
-  response += "<html><body><script type=\"text/javascript\">setTimeout(function(){ window.close() }, 5000);</script> RESPONSE</body></html>";
-  return response;
-});
-
-
-hotplate.set('hotCoreAuth/redirectURLs/success', {
-  signin: '/pages/pick',
-  recover: '/pages/pick',
-  register: '/pages/pick',
-  manager: '/',
-});
-
-hotplate.set('hotCoreAuth/redirectURLs/fail', {
-  signin: '/pages/welcome',
-  recover: '/pages/welcome',
-  register: '/pages/welcome',
-  manager: '/',
-});
-
-
-/*
-[16:51] <+julianduque> mercmobily: `jitsu env set MONGO_URL mongodb://......`
-[16:52] <+julianduque> mercmobily: var dbString = process.env.MONGO_URL;
-*/
-
- // mw.connect('mongodb://localhost/hotplate', {}, function( err, db ){
  mw.connect(dbString, {}, function( err, db ){
 
   // The connection is 100% necessary
@@ -123,15 +38,18 @@ hotplate.set('hotCoreAuth/redirectURLs/fail', {
     process.exit( 1 );
   }
 
-  hotplate.set( 'logToScreen' , true );
-  hotplate.set( 'db', mw.db );                  // The DB variable
+  hotplate.config.set( 'hotplate.db', mw.db );                  // The DB variable
 
   // Require necessary modules
   hotplate.require( 'hotCore' );
   hotplate.require( 'hotDojo' );
   require( 'bd' );
 
-  hotplate.hotEvents.emit( 'setDefaults', function(){
+  // Sets hotplate.config to non-defaults where necessary
+  // (Do this after loading modules, which might set some defaults)
+  configServer( app );
+
+  //hotplate.hotEvents.emit( 'setDefaults', function(){
     //app.set('port', process.env.PORT || 3000);
     app.set('port',  3000);
     app.set('views', __dirname + '/views');
@@ -154,9 +72,10 @@ hotplate.set('hotCoreAuth/redirectURLs/fail', {
       secret: 'woodchucks are nasty animal',
     }));
 
-    hotplate.hotEvents.emit( 'setRoutes', function() { 
-      app.use(app.router);
+    hotplate.hotEvents.emit( 'setRoutes', app, function() { 
+      app.use( app.router);
       app.use( hotplate.require('hotCoreError').hotCoreErrorHandler );
+
       app.use( function( err, req, res, next){ res.send("Oh dear, this should never happen!"); next(err); } );
 
       hotplate.hotEvents.emit( 'run', function() { 
@@ -168,17 +87,8 @@ hotplate.set('hotCoreAuth/redirectURLs/fail', {
 
       });
     });     
-  });
+  // });
 });
 
-
-// OLD RUBBISH
-  // Register modules
-  // hotplate.registerAllEnabledModules(/^hotCore/ ); // Register all core modules from hotplate's node_modules's dir
-  // hotplate.registerAllEnabledModules(/^hotDojo/ );
-
-  // The following two forms are equivalent
-  // hotplate.registerAllEnabledModules('node_modules', 'bd', __dirname ); // Register 'bd' from this module's node_modules dir
-  // hotplate.registerModule( 'bd', require('bd') );
 
 
