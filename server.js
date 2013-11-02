@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Module dependencies.
  */
@@ -24,7 +26,6 @@ var dummy
 
 
 var app = express();
-
 
 // Sane DB string that assumes mongoDb
 var dbString = process.env.MONGO_URL || 'mongodb://localhost/hotplate';
