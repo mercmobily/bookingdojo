@@ -7,23 +7,26 @@
 Error.stackTraceLimit = Infinity;
 
 var dummy
-    , express = require('express')
     , http = require('http')
-
-    // Mongodb for sessions
-    , MongoStore = require('connect-mongo')(express)
-    , mongodb = require('mongodb')
-
-    , fs = require('fs')
+    , express = require('express')
     , path = require('path')
+
     , mw = require('mongowrapper')
     , passport = require('passport')
-    , FacebookStrategy = require('passport-facebook').Strategy
 
     , hotplate = require('hotplate')
     , configServer = require('./configServer')
 ;
 
+
+/*
+ var console_log = console.log;
+ console.log = function( m ){
+   console_log("I WAS CALLED:");
+   console_log( m );
+    console_log( new Error().stack );
+ }
+*/
 
 var app = express();
 
@@ -39,7 +42,9 @@ var dbString = process.env.MONGO_URL || 'mongodb://localhost/hotplate';
     process.exit( 1 );
   }
 
-  hotplate.config.set( 'hotplate.db', mw.db );                  // The DB variable
+  // This is needed before anything else as it's used as prefix in
+  // several default config files
+  hotplate.config.set( 'hotplate.staticUrlPath', '/hotplate/somewhere/else/ahah' );
 
   // Require necessary modules
   hotplate.require( 'hotCore' );
@@ -48,7 +53,7 @@ var dbString = process.env.MONGO_URL || 'mongodb://localhost/hotplate';
 
   // Sets hotplate.config to non-defaults where necessary
   // (Do this after loading modules, which might set some defaults)
-  configServer( app );
+  configServer( db, app );
 
   //app.set('port', process.env.PORT || 3000);
   app.set('port',  3000);
