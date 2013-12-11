@@ -77,6 +77,8 @@ var dbString = process.env.MONGO_URL || 'mongodb://localhost/hotplate';
     secret: 'woodchucks are nasty animal',
   }));
 
+  app.get('/pureExpressAndJade', pureExpressAndJade );
+
   hotplate.hotEvents.emit( 'setRoutes', app, function() { 
     app.use( app.router);
     app.use( hotplate.require('hotCoreError').hotCoreErrorHandler );
@@ -95,4 +97,16 @@ var dbString = process.env.MONGO_URL || 'mongodb://localhost/hotplate';
 });
 
 
+function pureExpressAndJade( req, res, next ){
+
+  var hotCorePage = hotplate.require('hotCorePage');
+
+  hotCorePage.getElementsAsStrings( null, req, 'PureExpress', function( err, elements ){
+    if( err ) {
+      next( err );
+    } else {
+      res.render('index', elements );
+    }
+  });
+};
 

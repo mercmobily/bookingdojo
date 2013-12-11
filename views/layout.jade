@@ -1,0 +1,12 @@
+doctype 5
+html
+  head
+    != headLines
+    != vars
+    != csses
+    != jses
+    title= titleWords
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    != bodyLines
+    block content
