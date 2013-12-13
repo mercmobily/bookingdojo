@@ -51,7 +51,7 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
 
   // Sets hotplate.config to non-defaults where necessary
   // (Do this after loading modules, which might set some defaults)
-  configServer.configure( db, app, DbLayerMixin, SchemaMixin );
+  configServer.configure( app, db, DbLayerMixin, SchemaMixin );
 
   //app.set('port', process.env.PORT || 3000);
   app.set('port',  3000);

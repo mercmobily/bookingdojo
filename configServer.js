@@ -12,8 +12,6 @@ var hotplate = require('hotplate');
 
 exports.dbConnect = function( env, cb ){
 
-  var mongoURL = process.env.MONGO_URL;
-  var tingoDir = '/tmp/bookingdojo';;
 
   switch( env ){
     case 'production':
@@ -26,6 +24,8 @@ exports.dbConnect = function( env, cb ){
     break;
 
     default:
+
+      var tingoDir = '/tmp/bookingdojo';;
 
       // Create the directory
       try { require('fs').mkdirSync( tingoDir ); } catch( e ){ }
@@ -40,11 +40,10 @@ exports.dbConnect = function( env, cb ){
     break;
 
   }
-
 }
 
 
-exports.configure = function( db, app, DbLayerMixin, SchemaMixin ){
+exports.configure = function( app, db, DbLayerMixin, SchemaMixin ){
 
   // In development environment, get Dojo straight from the file system
   // (the default is the CDN)
