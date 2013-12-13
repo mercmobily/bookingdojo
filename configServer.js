@@ -4,8 +4,6 @@
 
 var hotplate = require('hotplate');
 
-
-
 // Set ConnectDB. In a development environment, it's just a simple
 // function that returns TingoDB. In a real environment, it will connect
 // to process.env.MONGO_URL
@@ -15,6 +13,9 @@ exports.dbConnect = function( env, cb ){
 
   switch( env ){
     case 'production':
+
+      console.log("Using MongoDB...");
+
       require('mongowrapper').connect( process.env.MONGO_URL, {}, function( err, db ){
 
         var DbLayerMixin = require('simpledblayer-mongo')
@@ -24,6 +25,8 @@ exports.dbConnect = function( env, cb ){
     break;
 
     default:
+
+      console.log("Using TingoDB...");
 
       var tingoDir = '/tmp/bookingdojo';;
 

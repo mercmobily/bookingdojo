@@ -11,7 +11,6 @@ var dummy
   , express = require('express')
   , path = require('path')
 
-  , mw = require('mongowrapper')
   , passport = require('passport')
 
   , hotplate = require('hotplate')
