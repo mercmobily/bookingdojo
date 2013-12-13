@@ -7,15 +7,15 @@
 Error.stackTraceLimit = Infinity;
 
 var dummy
-    , http = require('http')
-    , express = require('express')
-    , path = require('path')
+  , http = require('http')
+  , express = require('express')
+  , path = require('path')
 
-    , mw = require('mongowrapper')
-    , passport = require('passport')
+  , mw = require('mongowrapper')
+  , passport = require('passport')
 
-    , hotplate = require('hotplate')
-    , configServer = require('./configServer')
+  , hotplate = require('hotplate')
+  , configServer = require('./configServer')
 ;
 
 
@@ -30,14 +30,12 @@ var dummy
 
 var app = express();
 
-// Sane DB string that assumes mongoDb
-var dbString = process.env.MONGO_URL || 'mongodb://localhost/hotplate';
 
- mw.connect(dbString, {}, function( err, db ){
+configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaMixin ){
 
   // The connection is 100% necessary
   if( err ){
-    console.log("Could not connect to the mongodb database. Aborting...");
+    console.log("Could not connect to the database. Aborting...");
     console.log( err );
     process.exit( 1 );
   }
@@ -53,7 +51,7 @@ var dbString = process.env.MONGO_URL || 'mongodb://localhost/hotplate';
 
   // Sets hotplate.config to non-defaults where necessary
   // (Do this after loading modules, which might set some defaults)
-  configServer( db, app );
+  configServer.configure( db, app, DbLayerMixin, SchemaMixin );
 
   //app.set('port', process.env.PORT || 3000);
   app.set('port',  3000);

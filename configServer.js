@@ -4,7 +4,43 @@
 
 var hotplate = require('hotplate');
 
-exports = module.exports = function( db, app ){
+
+
+// Set ConnectDB. In a development environment, it's just a simple
+// function that returns TingoDB. In a real environment, it will connect
+// to process.env.MONGO_URL
+
+exports.dbConnect = function( env, cb ){
+
+  var mongoURL = process.env.MONGO_URL;
+  var tingoDir = '/tmp/bookingdojo';;
+
+  if( env === 'development' ){
+
+    // Create the directory
+    try { require('fs').mkdirSync( tingoDir ); } catch( e ){ }
+    
+    var Db = require('tingodb')().Db
+
+    var db = new Db(tingoDir, {});
+    var DbLayerMixin = require('simpledblayer-tingo')
+    var SchemaMixin = require('simpleschema-tingo');
+
+    cb( null, db, DbLayerMixin, SchemaMixin );
+
+  } else {
+    require('mongowrapper').connect( process.env.MONGO_URL, {}, function( err, db ){
+
+      var DbLayerMixin = require('simpledblayer-mongo')
+      var SchemaMixin = require('simpleschema-mongo');
+      cb( null, db, DbLayerMixin, SchemaMixin );
+    });
+  }
+
+}
+
+
+exports.configure = function( db, app, DbLayerMixin, SchemaMixin ){
 
   // In development environment, get Dojo straight from the file system
   // (the default is the CDN)
@@ -18,8 +54,8 @@ exports = module.exports = function( db, app ){
 
   // DB-specific stuff
   hotplate.config.set( 'hotplate.db', db );
-  hotplate.config.set( 'hotplate.DbLayerMixin', require('simpledblayer-mongo') );
-  hotplate.config.set( 'hotplate.SchemaMixin', require('simpleschema-mongo') );
+  hotplate.config.set( 'hotplate.DbLayerMixin', DbLayerMixin );
+  hotplate.config.set( 'hotplate.SchemaMixin', SchemaMixin );
 
   // Facebook strategy turned on
   hotplate.config.set('hotCoreAuth.strategies.facebook', {
