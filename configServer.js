@@ -16,7 +16,12 @@ exports.dbConnect = function( env, cb ){
 
       console.log("Using MongoDB...");
 
-      require('mongowrapper').connect( process.env.MONGO_URL, {}, function( err, db ){
+      require('mongodb').connect( process.env.MONGO_URL, {}, function( err, db ){
+
+        if( err ){
+          console.log( "Could NOT connect to the database! Error: ", err );
+          process.exit( 1 );
+        }
 
         var DbLayerMixin = require('simpledblayer-mongo')
         var SchemaMixin = require('simpleschema-mongo');
