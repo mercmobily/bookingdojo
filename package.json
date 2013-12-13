@@ -1,7 +1,7 @@
 {
   "name": "bookingdojo",
-  "description": "Booking Dojo, an example application build using Hotplate",
-  "version": "0.1.3-41",
+  "description": "Booking Dojo, an example application built using Hotplate",
+  "version": "0.1.3-42",
   "private": false,
   "dependencies": {
     "hotplate": "0.3.x",
