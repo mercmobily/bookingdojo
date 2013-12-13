@@ -13,8 +13,9 @@
     "simpledblayer": "0.3.x",
     "passport": "0.1.x",
     "tingodb": "0.1.x",
-    "simpledblayer-tingo": "0.3.x",
-    "simpleschema-tingo": "0.3.x",
+    "simpledblayer-mongo": "0.3.x",
+    "simpleschema-mongo": "0.3.x",
+    "mongodb": "1.4.x",
     "bd": "0.1.x"
   },
   "bundleDependencies": [
