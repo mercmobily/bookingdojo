@@ -15,26 +15,30 @@ exports.dbConnect = function( env, cb ){
   var mongoURL = process.env.MONGO_URL;
   var tingoDir = '/tmp/bookingdojo';;
 
-  if( env === 'development' ){
+  switch( env ){
+    case 'production':
+      require('mongowrapper').connect( process.env.MONGO_URL, {}, function( err, db ){
 
-    // Create the directory
-    try { require('fs').mkdirSync( tingoDir ); } catch( e ){ }
+        var DbLayerMixin = require('simpledblayer-mongo')
+        var SchemaMixin = require('simpleschema-mongo');
+        cb( null, db, DbLayerMixin, SchemaMixin );
+      });
+    break;
+
+    default:
+
+      // Create the directory
+      try { require('fs').mkdirSync( tingoDir ); } catch( e ){ }
     
-    var Db = require('tingodb')().Db
+      var Db = require('tingodb')().Db
 
-    var db = new Db(tingoDir, {});
-    var DbLayerMixin = require('simpledblayer-tingo')
-    var SchemaMixin = require('simpleschema-tingo');
+      var db = new Db(tingoDir, {});
+      var DbLayerMixin = require('simpledblayer-tingo')
+      var SchemaMixin = require('simpleschema-tingo');
 
-    cb( null, db, DbLayerMixin, SchemaMixin );
-
-  } else {
-    require('mongowrapper').connect( process.env.MONGO_URL, {}, function( err, db ){
-
-      var DbLayerMixin = require('simpledblayer-mongo')
-      var SchemaMixin = require('simpleschema-mongo');
       cb( null, db, DbLayerMixin, SchemaMixin );
-    });
+    break;
+
   }
 
 }
