@@ -18,24 +18,13 @@ var dummy
 ;
 
 
-/*
- var console_log = console.log;
- console.log = function( m ){
-   console_log("I WAS CALLED:");
-   console_log( m );
-    console_log( new Error().stack );
- }
-*/
-
 var app = express();
-
 
 configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaMixin ){
 
   // The connection is 100% necessary
   if( err ){
-    console.log("Could not connect to the database. Aborting...");
-    console.log( err );
+    hotplate.logger.error("Could not connect to the database. Aborting. Error: ", err );
     process.exit( 1 );
   }
 
@@ -59,7 +48,7 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
 
   // Various middleware
   app.use(express.favicon());
-  app.use(express.logger('dev'));
+  if( app.get( 'env' ) === 'development' ) app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
 
@@ -86,7 +75,10 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
       // Create the actual server
       var server = http.createServer( app );
       server.listen(app.get('port'), function(){
-        console.log("Express server listening on port " + app.get('port'));
+        hotplate.logger.info("Express server listening on port " + app.get('port'));
+
+        if( app.get( 'env' ) === 'development' ) hotplate.killLogging();
+
       });
 
     });

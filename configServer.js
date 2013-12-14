@@ -10,16 +10,13 @@ var hotplate = require('hotplate');
 
 exports.dbConnect = function( env, cb ){
 
-
   switch( env ){
     case 'production':
-
-      console.log("Using MongoDB...");
 
       require('mongodb').connect( process.env.MONGO_URL, {}, function( err, db ){
 
         if( err ){
-          console.log( "Could NOT connect to the database! Error: ", err );
+          hotplate.error( "Could NOT connect to the database! Error: ", err );
           process.exit( 1 );
         }
 
@@ -31,7 +28,7 @@ exports.dbConnect = function( env, cb ){
 
     default:
 
-      console.log("Using TingoDB...");
+      hotplate.log("Using TingoDB...");
 
       var tingoDir = '/tmp/bookingdojo';;
 
