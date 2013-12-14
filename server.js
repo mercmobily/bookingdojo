@@ -37,8 +37,8 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
   hotplate.require( 'hotDojo' );
   require( 'bd' );
 
-  // Sets hotplate.config to non-defaults where necessary
-  // (Do this after loading modules, which might set some defaults)
+  // Sets hotplate.config (user-defined values)
+  // (Do this after loading modules, which might set some defaults for themselves)
   configServer.configure( app, db, DbLayerMixin, SchemaMixin );
 
   //app.set('port', process.env.PORT || 3000);
@@ -77,7 +77,7 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
       server.listen(app.get('port'), function(){
         hotplate.logger.info("Express server listening on port " + app.get('port'));
 
-        if( app.get( 'env' ) === 'development' ) hotplate.killLogging();
+        if( app.get( 'env' ) !== 'development' ) hotplate.killLogging();
 
       });
 
