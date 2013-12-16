@@ -57,6 +57,8 @@ exports.configure = function( app, db, DbLayerMixin, SchemaMixin ){
     hotplate.config.set('hotDojoAdd.cssUrl',  '/dojo/dijit/themes/claro/claro.css' );
   }
 
+  hotplate.config.set( 'hotCoreStoreExposer.storeUrlPrefix', '/STOCAZZO' )
+
   // Will log messages to screen
   hotplate.config.set('logToScreen', true );
 

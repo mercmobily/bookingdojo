@@ -31,6 +31,7 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
   // This is needed before anything else as it's used as prefix in
   // several default config files
   hotplate.config.set( 'hotplate.staticUrlPath', '/hotplate/somewhere/else/ahah' );
+  hotplate.config.set( 'hotplate.dynamicUrlPrefix', '/' );
 
   // Require necessary modules
   hotplate.require( 'hotCore' );
