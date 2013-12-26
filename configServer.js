@@ -13,6 +13,8 @@ exports.dbConnect = function( env, cb ){
   switch( env ){
     case 'production':
 
+      hotplate.log("Using MongoDB...");
+
       require('mongodb').connect( process.env.MONGO_URL, {}, function( err, db ){
 
         if( err ){
@@ -55,12 +57,12 @@ exports.configure = function( app, db, DbLayerMixin, SchemaMixin ){
   if( app.get('env') === 'development' ){
     hotplate.config.set('hotDojoAdd.dojoUrl', '/dojo/dojo/dojo.js' );
     hotplate.config.set('hotDojoAdd.cssUrl',  '/dojo/dijit/themes/claro/claro.css' );
+    hotplate.config.set('hotDojoAdd.dojoConfig.isDebug',  true );
   }
 
   //hotplate.config.set( 'hotCoreStoreExposer.storesUrlsPrefix', '/STOCAZZO' )
 
-  // Will log messages to screen
-  hotplate.config.set('logToScreen', true );
+  hotplate.config.set( 'hotCoreStoreIndexer.zapIndexes', true )
 
   // DB-specific stuff
   hotplate.config.set( 'hotplate.db', db );

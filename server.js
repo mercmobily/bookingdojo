@@ -78,7 +78,7 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
       server.listen(app.get('port'), function(){
         hotplate.logger.info("Express server listening on port " + app.get('port'));
 
-        if( app.get( 'env' ) !== 'development' ) hotplate.killLogging();
+        //if( app.get( 'env' ) !== 'development' ) hotplate.killLogging();
 
       });
 
