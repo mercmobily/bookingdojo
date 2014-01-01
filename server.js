@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Module dependencies.
  */
@@ -57,14 +55,14 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
   app.use(express.cookieParser('woodchucks are nasty animals'));
 
   // Static routes -- they MUST go before the session!
-  app.use(express.static(path.join(__dirname, 'public')));
   app.use( hotplate.require('hotCoreClientFiles').serve() );
+  app.use(express.static(path.join(__dirname, 'public')));
 
   app.use(express.cookieSession({
     secret: 'woodchucks are nasty animal',
   }));
 
-  app.get('/pureExpressAndJade', pureExpressAndJade );
+  //app.get('/pureExpressAndJade', pureExpressAndJade );
 
   hotplate.hotEvents.emit( 'setRoutes', app, function() { 
     app.use( app.router);
