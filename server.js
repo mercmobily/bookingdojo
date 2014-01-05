@@ -55,16 +55,17 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
   app.use(express.cookieParser('woodchucks are nasty animals'));
 
   // Static routes -- they MUST go before the session!
-  app.use( hotplate.require('hotCoreClientFiles').serve() );
+  app.use( hotplate.require('hotCoreClientFiles').serve( app, {} ) );
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.use(express.cookieSession({
     secret: 'woodchucks are nasty animal',
   }));
 
-  //app.get('/pureExpressAndJade', pureExpressAndJade );
+  app.get('/pureExpressAndJade', pureExpressAndJade );
 
   hotplate.hotEvents.emit( 'setRoutes', app, function() { 
+
     app.use( app.router);
     app.use( hotplate.require('hotCoreError').hotCoreErrorHandler );
 
@@ -93,7 +94,7 @@ function pureExpressAndJade( req, res, next ){
     if( err ) {
       next( err );
     } else {
-      res.render('index', elements );
+      res.render('folder/index', elements );
     }
   });
 };
