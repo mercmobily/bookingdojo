@@ -60,8 +60,6 @@ exports.configure = function( app, db, DbLayerMixin, SchemaMixin ){
     hotplate.config.set('hotDojoAdd.dojoConfig.isDebug',  true );
   }
 
-  //hotplate.config.set( 'hotCoreStoreExposer.storesUrlsPrefix', '/STOCAZZO' )
-
   hotplate.config.set( 'hotCoreStoreIndexer.zapIndexes', true )
 
   // DB-specific stuff
