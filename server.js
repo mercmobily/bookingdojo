@@ -13,6 +13,8 @@ var dummy
 
   , hotplate = require('hotplate')
   , configServer = require('./configServer')
+
+  , SimpleDbLayer = require('simpledblayer')
 ;
 
 
@@ -46,7 +48,7 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
   app.set('view engine', 'jade');
 
   // Various middleware
-  app.use(express.favicon());
+  //app.use(express.favicon());
   if( app.get( 'env' ) === 'development' ) app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
@@ -72,6 +74,10 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
     app.use( function( err, req, res, next){ res.send("Oh dear, this should never happen!"); next(err); } );
 
     hotplate.hotEvents.emit( 'run', function() { 
+
+      // Important! Will make nested stores work
+      SimpleDbLayer.initLayers();    
+
       // Create the actual server
       var server = http.createServer( app );
       server.listen(app.get('port'), function(){
