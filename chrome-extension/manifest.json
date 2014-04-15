@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+
+  "name": "Network checker",
+  "description": "Network checker",
+  "version": "1.0",
+
+  "permissions": [
+          "webRequest",
+          "tabs",
+          "*://*/",
+          "webRequestBlocking", 
+          "\u003Call_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["contentscript.js"]
+    }
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  }
+
+}
