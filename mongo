@@ -1,3 +1,3 @@
-sudo mongod --config /etc/mongodb.conf --repair
-sudo mongod --dbpath /var/lib/mongodb --repair
+mongod --config /etc/mongodb.conf --repair
+mongod --dbpath /var/lib/mongodb --repair
 sudo service mongodb start
