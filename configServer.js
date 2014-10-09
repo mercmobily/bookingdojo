@@ -13,12 +13,12 @@ exports.dbConnect = function( env, cb ){
   switch( env ){
     case 'production':
 
-      hotplate.log("Using MongoDB...");
+      console.log("Using MongoDB...");
 
-      require('mongodb').connect( process.env.MONGO_URL, {}, function( err, db ){
+      require('mongodb').MongoClient.connect( process.env.MONGO_URL, {} , function( err, db ){
 
         if( err ){
-          hotplate.error( "Could NOT connect to the database! Error: ", err );
+          hotplate.critical( "Could NOT connect to the database! Error: ", err );
           process.exit( 1 );
         }
 

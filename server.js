@@ -33,13 +33,19 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
   hotplate.config.set( 'hotplate.moduleFilesPrefix', '/app/hotplate' );
   hotplate.config.set( 'hotplate.routeUrlsPrefix', '/app' );
 
+
   // Require necessary modules
+  // (You CAN be more selective if you like)
   hotplate.require( 'hotCore' );
   hotplate.require( 'hotDojo' );
+
+  // Require your app's main module(s) here
   require( 'bd' );
 
-  // Sets hotplate.config (user-defined values)
-  // (Do this after loading modules, which might set some defaults for themselves)
+  // More hotplate.config.set() commands can go here
+  // (After loading modules, which might set some defaults for themselves)
+  // It's good practice to aggregate all customisations in
+  // one spot, in this case configServer.configure()...
   configServer.configure( app, db, DbLayerMixin, SchemaMixin );
 
   //app.set('port', process.env.PORT || 3000);
@@ -66,7 +72,12 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
 
   app.get('/pureExpressAndJade', pureExpressAndJade );
 
-  hotplate.hotEvents.emit( 'setRoutes', app, function() { 
+  hotplate.hotEvents.emit( 'setRoutes', app, function( err ) { 
+
+    if( err ){
+      console.error( "Error setting the routes:", err );
+      process.exit();
+    }
 
     app.use( app.router);
     app.use( hotplate.require('hotCoreError').hotCoreErrorHandler );
@@ -75,13 +86,17 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
 
     hotplate.hotEvents.emit( 'run', function() { 
 
+      if( err ){
+        console.error( "Error running the hook 'run':", err );
+        process.exit();
+      }
       // Important! Will make nested stores work
       SimpleDbLayer.initLayers();    
 
       // Create the actual server
       var server = http.createServer( app );
       server.listen(app.get('port'), function(){
-        hotplate.logger.info("Express server listening on port " + app.get('port'));
+        console.log("Express server listening on port " + app.get('port'));
 
         //if( app.get( 'env' ) !== 'development' ) hotplate.killLogging();
 
