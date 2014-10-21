@@ -4,4 +4,5 @@
 
 #NODE_ENV=production MONGO_URL='mongodb://localhost/ddd18' LOCAL_DOJO=1 DEBUG=hotplate:hotCoreTransport:* node server.js 
 #NODE_ENV=production MONGO_URL='mongodb://localhost/ddd18?socketTimeoutMS=30001' LOCAL_DOJO=1 DEBUG=hotplate:hotCoreServerLogger,hotplate:hotCoreTransport:* node server.js 
-NODE_ENV=production MONGO_URL='mongodb://localhost/ddd18?socketTimeoutMS=30001' LOCAL_DOJO=1 DEBUG=hotplate:hotCoreServerLogger,hotplate:hotCoreTransport,hotplate:hotCoreTransport:sms-plivo node server.js 
+NODE_ENV=production MONGO_URL='mongodb://localhost/ddd20?socketTimeoutMS=30001' LOCAL_DOJO=1 DEBUG=bd,hotplate:hotCoreServerLogger,hotplate:hotCoreTransport,hotplate:hotCoreTransport:sms-plivo node server.js 
+#NODE_ENV=production MONGO_URL='mongodb://localhost/ddd20?socketTimeoutMS=30001' LOCAL_DOJO=1 DEBUG=bd,hotplate:hotCoreServerLogger,hotplate:hotCoreTransport,hotplate:hotCoreTransport:sms-plivo,simpledblayer:mongo node server.js 
