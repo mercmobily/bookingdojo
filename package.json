@@ -16,6 +16,7 @@
     "simpledblayer-mongo": "0.3.x",
     "simpleschema-mongo": "0.3.x",
     "mongodb": "1.4.x",
+    "html-to-text": "1.x",
     "bd": "0.1.x"
   },
   "bundleDependencies": [
