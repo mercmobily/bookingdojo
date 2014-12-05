@@ -91,7 +91,7 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
         process.exit();
       }
       // Important! Will make nested stores work
-      SimpleDbLayer.initLayers();    
+      SimpleDbLayer.initLayers( DbLayerMixin );    
 
       // Create the actual server
       var server = http.createServer( app );
