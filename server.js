@@ -5,9 +5,18 @@
 Error.stackTraceLimit = Infinity;
 
 var dummy
+
+  // Node and Express' basic modules
   , http = require('http')
   , express = require('express')
   , path = require('path')
+
+  // Modules that used to be in connect in Express 3
+  , favicon = require('serve-favicon')
+  , logger = require('morgan')
+  , cookieParser = require('cookie-parser')
+  , cookieSession = require('cookie-session')
+  , bodyParser = require('body-parser')
 
   , passport = require('passport')
 
@@ -33,7 +42,6 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
   hotplate.config.set( 'hotplate.moduleFilesPrefix', '/app/hotplate' );
   hotplate.config.set( 'hotplate.routeUrlsPrefix', '/app' );
 
-
   // Require necessary modules
   // (You CAN be more selective if you like)
   hotplate.require( 'hotCore' );
@@ -54,21 +62,18 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
   app.set('view engine', 'jade');
 
   // Various middleware
-  //app.use(express.favicon());
-  if( app.get( 'env' ) === 'development' ) app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
+  app.use(favicon(__dirname + '/public/favicon.ico'));
+  if( app.get( 'env' ) === 'development' ) app.use(logger('dev'));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(cookieParser('woodchucks are nasty animals!!!'));
+  app.use(cookieSession({ secret: 'woodchucks are nasty animals!!!' }));
 
   app.use(passport.initialize()); // Passport initialize
-  app.use(express.cookieParser('woodchucks are nasty animals'));
 
   // Static routes -- they MUST go before the session!
   app.use( hotplate.require('hotCoreClientFiles').serve( app, {} ) );
   app.use(express.static(path.join(__dirname, 'public')));
-
-  app.use(express.cookieSession({
-    secret: 'woodchucks are nasty animal',
-  }));
 
   app.get('/pureExpressAndJade', pureExpressAndJade );
 
@@ -79,10 +84,12 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
       process.exit();
     }
 
-    app.use( app.router);
     app.use( hotplate.require('hotCoreError').hotCoreErrorHandler );
 
-    app.use( function( err, req, res, next){ res.send("Oh dear, this should never happen!"); next(err); } );
+    app.use( function( err, req, res, next){
+      res.send("Oh dear, this should never happen!");
+      next(err);
+    });
 
     hotplate.hotEvents.emit( 'run', function() { 
 
@@ -90,16 +97,14 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
         console.error( "Error running the hook 'run':", err );
         process.exit();
       }
-      // Important! Will make nested stores work
+
+      // Important! Will make nested tables work
       SimpleDbLayer.initLayers( DbLayerMixin );    
 
       // Create the actual server
       var server = http.createServer( app );
       server.listen(app.get('port'), function(){
         console.log("Express server listening on port " + app.get('port'));
-
-        //if( app.get( 'env' ) !== 'development' ) hotplate.killLogging();
-
       });
 
     });
