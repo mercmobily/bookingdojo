@@ -54,7 +54,7 @@ exports.configure = function( app, db, DbLayerMixin, SchemaMixin ){
 
   // In development environment, get Dojo straight from the file system
   // (the default is the CDN)
-  if( app.get('env') === 'development' || process.env.LOCAL_DOJO ){
+  if( app.get('env') === 'development' || Number( process.env.LOCAL_DOJO ) ){
     hotplate.config.set('hotDojoAdd.dojoUrl', '/dojo/dojo/dojo.js' );
     hotplate.config.set('hotDojoAdd.cssUrl',  '/dojo/dijit/themes/claro/claro.css' );
     hotplate.config.set('hotDojoAdd.dojoConfig.isDebug',  true );
