@@ -1,0 +1,33 @@
+
+# LOGIN/REGISTER
+
+* Try to login with non-existing username/pass => Login fails
+* Click on "Register", create user "m1", password "p", confirming "pp" => Password must match
+* Create user "m1", password "p" => User created, now in app/pick
+* Create workspace "w1" => Redirect to workspace's main screen, in "Tell us about you" screen
+
+# WELCOME SCREEN
+
+* Add "Tony" as name, press Enter => Cursor skips to Email Address, contact list underneath refreshes with contact's name
+* Go back to "Details", save "Mobily" as surname, pick date of birth => contact list underneath refreshes with extra details
+* Add "tony@tony.com" as an email address for Tony => dialog disappeares, contact list underneath refreshes with email address
+
+# CONTACTS SCREEN
+
+* Click on "Admin" tab, add "Friend" and "Coworker" as contact categories
+* Click on "Contacts" tab, click on "New" => Screen appears
+* Add "Chiara Tobily" (name/surname) => contact list underneath refreshes with Chiara's name
+* Add "chiara@chiara.com" as an email address for Chiara => Email gets added, screen underneath is updated showing primary email address
+* Change "chiara@chiara.com" into "chiara@chiara.com.au" => Email underneath is updated with .au
+* Add "chiara2@chiara.com" as an email address => contact list underneath reloads but nothing changes (chiara@chiara.com is STILL the mail email address)
+* Drag "chiara2@chiara.com" as the FIRST email in the list => contact list underneath refreshes with "chiara2@chiara.com" as the primary email address
+* Click on "Order by name" => contact list refreshes, "Chiara" becomes the first contact
+* Click on "Only starred contacts" => contact list refreshes, it's empty
+* Click on "Only starred contacts" again => contact list refreshes, it has all contacts
+* Star "Chiara Tobily" => yellow star appears
+* Click on "Only starred contacts" => contact list refreshes, it only has Chiara
+* Click on "Only starred contacts" again => contact list refreshes, it has all contacts
+* Type "chiara" in search => contact list refreshes, it only has chiara
+
+# CONFIG SCREENS
+

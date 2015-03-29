@@ -2,7 +2,7 @@
 #NODE_ENV=production MONGO_URL='mongodb://localhost/ddd18' LOCAL_DOJO=1 node server.js
 
 
-NODE_ENV=production MONGO_URL='mongodb://localhost/ddd29?socketTimeoutMS=30001' LOCAL_DOJO=1 DEBUG=bd,connect:cookieSession node server.js 
+NODE_ENV=production MONGO_URL='mongodb://localhost/ddd31?socketTimeoutMS=30001' LOCAL_DOJO=1 DEBUG=bd node server.js 
 #NODE_ENV=production MONGO_URL='mongodb://localhost/ddd21?socketTimeoutMS=30001' LOCAL_DOJO=1 DEBUG=bd,simpledblayer:* node server.js 
 #NODE_ENV=production MONGO_URL='mongodb://localhost/ddd18' LOCAL_DOJO=1 DEBUG=hotplate:hotCoreTransport:* node server.js 
 #NODE_ENV=production MONGO_URL='mongodb://localhost/ddd18?socketTimeoutMS=30001' LOCAL_DOJO=1 DEBUG=hotplate:hotCoreServerLogger,hotplate:hotCoreTransport:* node server.js 

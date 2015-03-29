@@ -45,7 +45,7 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
   // Require necessary modules
   // (You CAN be more selective if you like)
   hotplate.require( 'hotCore' );
-  hotplate.require( 'hotDojo' );
+  hotplate.require( 'hotClientDojo' );
 
   // Require your app's main module(s) here
   require( 'bd' );
