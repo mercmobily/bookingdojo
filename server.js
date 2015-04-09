@@ -77,7 +77,7 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
 
   app.get('/pureExpressAndJade', pureExpressAndJade );
 
-  hotplate.hotEvents.emit( 'setRoutes', app, function( err ) { 
+  hotplate.hotEvents.emitCollect( 'setRoutes', app, function( err ) { 
 
     if( err ){
       console.error( "Error setting the routes:", err );
@@ -91,7 +91,7 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
       next(err);
     });
 
-    hotplate.hotEvents.emit( 'run', function() { 
+    hotplate.hotEvents.emitCollect( 'run', function() { 
 
       if( err ){
         console.error( "Error running the hook 'run':", err );
