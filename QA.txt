@@ -29,5 +29,8 @@
 * Click on "Only starred contacts" again => contact list refreshes, it has all contacts
 * Type "chiara" in search => contact list refreshes, it only has chiara
 
-# CONFIG SCREENS
+# MESSAGES SCREEN
+TODO
 
+# CONFIG SCREENS
+TODO
