@@ -26,7 +26,6 @@ var dummy
   , SimpleDbLayer = require('simpledblayer')
 ;
 
-
 var app = express();
 
 configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaMixin ){
