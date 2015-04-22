@@ -24,6 +24,8 @@ var dummy
   , configServer = require('./configServer')
 
   , SimpleDbLayer = require('simpledblayer')
+  , JsonRestStores = require('jsonreststores')
+
 ;
 
 var app = express();
@@ -76,36 +78,46 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
 
   app.get('/pureExpressAndJade', pureExpressAndJade );
 
-  hotplate.hotEvents.emitCollect( 'setRoutes', app, function( err ) { 
+
+  hotplate.hotEvents.emitCollect( 'stores',function( err ) { 
 
     if( err ){
-      console.error( "Error setting the routes:", err );
+      console.error( "Error running the stores:", err );
       process.exit();
     }
 
-    app.use( hotplate.require('hotCoreError').hotCoreErrorHandler );
+    // Important!  
+    JsonRestStores.init();
+    SimpleDbLayer.init();
 
-    app.use( function( err, req, res, next){
-      res.send("Oh dear, this should never happen!");
-      next(err);
-    });
-
-    hotplate.hotEvents.emitCollect( 'run', function() { 
+    hotplate.hotEvents.emitCollect( 'setRoutes', app, function( err ) { 
 
       if( err ){
-        console.error( "Error running the hook 'run':", err );
+        console.error( "Error setting the routes:", err );
         process.exit();
       }
 
-      // Important! Will make nested tables work
-      SimpleDbLayer.initLayers( DbLayerMixin );    
+      app.use( hotplate.require('hotCoreError').hotCoreErrorHandler );
 
-      // Create the actual server
-      var server = http.createServer( app );
-      server.listen(app.get('port'), function(){
-        console.log("Express server listening on port " + app.get('port'));
+      app.use( function( err, req, res, next){
+        res.send("Oh dear, this should never happen!");
+        next(err);
       });
 
+      hotplate.hotEvents.emitCollect( 'run', function() { 
+
+        if( err ){
+          console.error( "Error running the hook 'run':", err );
+          process.exit();
+        }
+
+        // Create the actual server
+        var server = http.createServer( app );
+        server.listen(app.get('port'), function(){
+          console.log("Express server listening on port " + app.get('port'));
+        });
+
+      });
     });
   });     
 });
