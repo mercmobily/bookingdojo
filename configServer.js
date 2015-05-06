@@ -68,9 +68,14 @@ exports.configure = function( app, db, DbLayerMixin, SchemaMixin ){
   hotplate.config.set( 'hotplate.SchemaMixin', SchemaMixin );
 
   // Facebook strategy turned on
-  hotplate.config.set('hotCoreAuth.strategies.facebook', {
-    clientID: '453817548028633',
-    clientSecret: '8219677eabdb22ea256d08f515978ee3',
+  hotplate.config.set('hotCoreAuth.strategies', {
+    facebook: {
+      clientID: '453817548028633',
+      clientSecret: '8219677eabdb22ea256d08f515978ee3',
+    },
+    local: {
+    },
+  
   });
 
 }
