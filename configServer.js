@@ -2,7 +2,10 @@
  * Module dependencies.
  */
 
-var hotplate = require('hotplate');
+var dummy
+, hotplate = require('hotplate')
+, path = require('path')
+;
 
 // Set ConnectDB. In a development environment, it's just a simple
 // function that returns TingoDB. In a real environment, it will connect
@@ -36,7 +39,7 @@ exports.dbConnect = function( env, cb ){
 
       // Create the directory
       try { require('fs').mkdirSync( tingoDir ); } catch( e ){ }
-    
+
       var Db = require('tingodb')().Db
 
       var db = new Db(tingoDir, {});
@@ -60,12 +63,16 @@ exports.configure = function( app, db, DbLayerMixin, SchemaMixin ){
     hotplate.config.set('hotClientDojo.dojoConfig.isDebug',  true );
   }
 
-  hotplate.config.set( 'hotCoreStoreIndexer.zapIndexes', true )
+  hotplate.config.set( 'hotCoreStoreIndexer.zapIndexes', true );
 
   // DB-specific stuff
   hotplate.config.set( 'hotplate.db', db );
   hotplate.config.set( 'hotplate.DbLayerMixin', DbLayerMixin );
   hotplate.config.set( 'hotplate.SchemaMixin', SchemaMixin );
+
+  // Since it's multi home, the default app route will need :workspaceId to it
+  hotplate.config.set( 'hotClientDojo.appRoute', path.join( hotplate.config.get( 'hotplate.routeUrlsPrefix' ), '/ws/:workspaceId' ) );
+
 
   // Facebook strategy turned on
   hotplate.config.set('hotCoreAuth.strategies', {
@@ -75,9 +82,7 @@ exports.configure = function( app, db, DbLayerMixin, SchemaMixin ){
     },
     local: {
     },
-  
+
   });
 
 }
-
-
