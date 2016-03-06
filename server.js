@@ -45,8 +45,8 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
 
   // Require necessary modules
   // (You CAN be more selective if you like)
-  hotplate.require( 'hotCore' );
-  hotplate.require( 'hotClientDojo' );
+  require( 'hotplate/node_modules/hotCore' );
+  require( 'hotplate/node_modules/hotClientDojo' );
 
   // Require your app's main module(s) here
   require( 'bd' );
@@ -73,38 +73,38 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
   app.use(passport.initialize()); // Passport initialize
 
   // Static routes -- they MUST go before the session!
-  app.use( hotplate.require('hotCoreClientFiles').serve( app, {} ) );
+  app.use( require('hotplate/node_modules/hotCoreClientFiles').serve( app, {} ) );
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.get('/pureExpressAndJade', pureExpressAndJade );
 
 
-  hotplate.hotEvents.emitCollect( 'stores',function( err ) { 
+  hotplate.hotEvents.emitCollect( 'stores',function( err ) {
 
     if( err ){
       console.error( "Error running the stores:", err );
       process.exit();
     }
 
-    // Important!  
+    // Important!
     JsonRestStores.init();
     SimpleDbLayer.init();
 
-    hotplate.hotEvents.emitCollect( 'setRoutes', app, function( err ) { 
+    hotplate.hotEvents.emitCollect( 'setRoutes', app, function( err ) {
 
       if( err ){
         console.error( "Error setting the routes:", err );
         process.exit();
       }
 
-      app.use( hotplate.require('hotCoreError').hotCoreErrorHandler );
+      app.use( require('hotplate/node_modules/hotCoreError').hotCoreErrorHandler );
 
       app.use( function( err, req, res, next){
         res.send("Oh dear, this should never happen!");
         next(err);
       });
 
-      hotplate.hotEvents.emitCollect( 'run', function() { 
+      hotplate.hotEvents.emitCollect( 'run', function() {
 
         if( err ){
           console.error( "Error running the hook 'run':", err );
@@ -119,13 +119,13 @@ configServer.dbConnect( app.get('env'), function( err, db, DbLayerMixin, SchemaM
 
       });
     });
-  });     
+  });
 });
 
 
 function pureExpressAndJade( req, res, next ){
 
-  var hotCorePage = hotplate.require('hotCorePage');
+  var hotCorePage = require('hotplate/node_modules/hotCorePage');
 
   hotCorePage.getElementsAsStrings( null, req, 'PureExpress', function( err, elements ){
     if( err ) {
@@ -135,4 +135,3 @@ function pureExpressAndJade( req, res, next ){
     }
   });
 };
-

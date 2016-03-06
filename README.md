@@ -34,6 +34,3 @@ Or:
 * Dojo will be expected to be in the public/dojo folder (you will need to place it there)
 
 You can change how things are configured by changing the file configServer.js.
-
-
-
